@@ -524,7 +524,7 @@
 --     )
 --     INTO result
 --     FROM (
---         SELECT 
+--         SELECT
 --             s.student_number,
 --             s.student_name,
 --             COALESCE(SUM(f.amount_paid), 0) AS total_paid,
