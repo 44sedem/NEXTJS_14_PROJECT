@@ -61,9 +61,6 @@ const Dashboard = ({ params }: Props) => {
           // redirect('/');
           return Loading;
         }
-        async () => {
-
-        }
         // Update state with fetched data
       } catch (error) {
         console.error(error);
@@ -100,7 +97,7 @@ const Dashboard = ({ params }: Props) => {
       {/* Sidebar */}
 
       {/* Main Content */}
-      <main className="flex-3 p-0 ">
+      <main className="flex-3 p-0 text-black">
         <div className="p-0 border-b border-gray-200">
           {/* // calling the getTime function from getTime.ts */}
 
@@ -109,7 +106,7 @@ const Dashboard = ({ params }: Props) => {
             <GetDate params={params} />
             {/* // div class to display a message based on the time of the day */}
             <div className="mb-6">
-              <h2 className="text-2xl font-bold">
+              <h2 className="text-2xl font-bold text-black">
                 Good {timeOfDay} {studentInfo?.lname} 😂!
               </h2>
               {timeOfDay === "morning" && (
@@ -211,12 +208,12 @@ const Dashboard = ({ params }: Props) => {
                           <span className="text-sm">{task}</span>
                         </div>
 
-                        <a href="/assignments">
+                        <Link href="/assignments">
                           <ChevronRight
                             size={16}
                             className="text-gray-400 transform"
                           />
-                        </a>
+                        </Link>
                       </li>
                     )
                   )}

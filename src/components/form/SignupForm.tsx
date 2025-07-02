@@ -48,7 +48,7 @@ const SignUpForm = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8002/course_service/sign_up_student",
+        `http://localhost:8002/course_service/sign_up_student`,
         data,
         {
           headers: {
@@ -87,7 +87,7 @@ const SignUpForm = () => {
               {...register("fname")}
               type="text"
               placeholder="First name"
-              className="w-full pl-10 pr-3 py-2 border rounded-md placeholder-gray-400"
+              className="w-full pl-10 pr-3 py-2 border rounded-md placeholder-gray-400 text-black"
             />
           </div>
           {errors.fname && <p className="text-red-500 text-sm">{errors.fname.message}</p>}
