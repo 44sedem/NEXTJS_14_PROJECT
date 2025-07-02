@@ -1,4 +1,5 @@
-"use client";
+'use client';
+
 import React, { useContext, useEffect, useState } from "react";
 import {
   LayoutGrid,
@@ -16,21 +17,11 @@ import GetDate from "@/components/dashboard/Getdate";
 import { getTime } from "@/components/dashboard/getTime";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
-import { redirect, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import axios from "axios";
-// import { useAuth } from "@/utils/student_info";
-
-// import { getStudentGrades } from '@/utils/[...nextauth]/student_api';
-// import { AuthInfo, getStudentInfo } from '../../../../utils/student_api';
 import Loading from "@/app/loading";
 import { AuthInfo } from "@/utils/student_api";
-
-type Props = {
-  params: {
-    id: string;
-  };
-};
 
 interface studentType {
   fname: string;
@@ -43,10 +34,12 @@ interface studentType {
   profile_img: string;
   level: string;
 }
-const Dashboard = ({ params }: Props) => {
+
+const Dashboard = () => {
+  const { id } = useParams() as { id: string };
   const timeOfDay = getTime();
   const [isLoading, setIsLoading] = useState(true);
-  const { studentInfoStored} = useContext(AuthInfo);
+  const { studentInfoStored } = useContext(AuthInfo);
   const [studentInfo, setStudentInfo] = useState<studentType | null>(null);
 
   useEffect(() => {
@@ -54,35 +47,25 @@ const Dashboard = ({ params }: Props) => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:8002/course_service/student_info?s_id=${params.id}`
+          `http://localhost:8002/course_service/student_info?s_id=${id}`
         );
-        setStudentInfo(response.data); 
+        setStudentInfo(response.data);
         if (!studentInfoStored) {
-          // redirect('/');
           return Loading;
         }
-        // Update state with fetched data
       } catch (error) {
         console.error(error);
-      }
-      finally {
+      } finally {
         setIsLoading(false);
       }
     };
-    fetchData()
-  }, [params.id, studentInfoStored]);
-    const temp_stud = studentInfoStored
-    if (studentInfoStored?.id != params.id) {
-      // console.log('StudentInfo: ', studentInfoStored?.id);
-      // console.log('param: ', params.id);
-      
-      // redirect('/');
-      // return <div className="p-4">Loading...</div>;
-    }
+    fetchData();
+  }, [id, studentInfoStored]);
 
- 
-  // console.log('StudentInfoStored: ', studentInfoStored?.id);
-  //     console.log('param: ', params.id);
+  if (studentInfoStored?.id != id) {
+    // redirect('/');
+    // return <div className="p-4">Loading...</div>;
+  }
 
   if (isLoading) {
     return (
@@ -99,12 +82,9 @@ const Dashboard = ({ params }: Props) => {
       {/* Main Content */}
       <main className="flex-3 p-0 text-black">
         <div className="p-0 border-b border-gray-200">
-          {/* // calling the getTime function from getTime.ts */}
-
           <div className="p-0 bg-gray-100">
-            {/* // calling GetDate function from GetDate.tsx */}
-            <GetDate params={params} />
-            {/* // div class to display a message based on the time of the day */}
+            <GetDate params={{ id }} />
+
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-black">
                 Good {timeOfDay} {studentInfo?.lname} 😂!
@@ -116,27 +96,28 @@ const Dashboard = ({ params }: Props) => {
               {timeOfDay === "evening" && <p>Have a relaxing evening!</p>}
             </div>
 
-            {/* // This is used to display your courses */}
+            {/* Courses */}
             <div className="mb-6">
               <div className="flex justify-between items-center mb-4">
                 <h3 className="font-semibold">Your courses</h3>
                 <Link
-                  href={`/student/${params.id}/courses`}
+                  href={`/student/${id}/courses`}
                   className="text-sm text-blue-600"
                 >
                   View All
                 </Link>
               </div>
+
               <Card className="bg-white shadow-sm mb-4">
                 <CardContent className="p-4 flex items-center">
-                  <Link href={`/student/${params.id}/courses`}>
+                  <Link href={`/student/${id}/courses`}>
                     <Image
                       src="/books.jpg"
                       alt="Placeholder"
                       width={48}
                       height={48}
                       className="w-12 h-12 bg-gray-200 rounded-lg mr-4"
-                    />{" "}
+                    />
                   </Link>
                   <div>
                     <p className="font-semibold">Course One</p>
@@ -150,14 +131,14 @@ const Dashboard = ({ params }: Props) => {
 
               <Card className="bg-white shadow-sm">
                 <CardContent className="p-4 flex items-center">
-                  <Link href={`/student/${params.id}/courses`}>
+                  <Link href={`/student/${id}/courses`}>
                     <Image
                       src="/books.jpg"
                       alt="Placeholder"
                       width={48}
                       height={48}
                       className="w-12 h-12 bg-gray-200 rounded-lg mr-4"
-                    />{" "}
+                    />
                   </Link>
                   <div>
                     <p className="font-semibold">Course Two</p>
@@ -170,7 +151,7 @@ const Dashboard = ({ params }: Props) => {
               </Card>
             </div>
 
-            {/* // This is used to display the course tasks */}
+            {/* Course Tasks */}
             <Card className="bg-white shadow-sm mb-6">
               <CardHeader>
                 <div className="flex justify-between items-center">
@@ -178,7 +159,7 @@ const Dashboard = ({ params }: Props) => {
                     Course Task
                   </CardTitle>
                   <Link
-                    href={`/student/${params.id}/finance`}
+                    href={`/student/${id}/finance`}
                     className="text-sm text-blue-600"
                   >
                     View All
@@ -195,15 +176,7 @@ const Dashboard = ({ params }: Props) => {
                       >
                         <div className="flex items-center">
                           <div className="w-8 h-8 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
-                            {index === 0 && (
-                              <Book size={16} className="text-indigo-600" />
-                            )}
-                            {index === 1 && (
-                              <Book size={16} className="text-indigo-600" />
-                            )}
-                            {index === 2 && (
-                              <Book size={16} className="text-indigo-600" />
-                            )}
+                            <Book size={16} className="text-indigo-600" />
                           </div>
                           <span className="text-sm">{task}</span>
                         </div>
@@ -222,11 +195,7 @@ const Dashboard = ({ params }: Props) => {
             </Card>
           </div>
         </div>
-        <div className="p-4">
-          {/* Additional dashboard content can be added here */}
-        </div>
-
-        {/* Additional dashboard content can be added here */}
+        <div className="p-4">{/* Additional dashboard content */}</div>
       </main>
     </div>
   );
