@@ -37,12 +37,15 @@ interface studentType {
 
 const Dashboard = () => {
   const { id } = useParams() as { id: string };
-  const timeOfDay = getTime();
+  const [timeOfDay, setTimeOfDay] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { studentInfoStored } = useContext(AuthInfo);
   const [studentInfo, setStudentInfo] = useState<studentType | null>(null);
 
   useEffect(() => {
+    // Set time of day on client side
+    setTimeOfDay(getTime());
+    
     const fetchData = async () => {
       try {
         setIsLoading(true);
@@ -87,13 +90,14 @@ const Dashboard = () => {
 
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-black">
-                Good {timeOfDay} {studentInfo?.lname} 😂!
+                Good {timeOfDay || 'day'} {studentInfo?.lname}!
               </h2>
               {timeOfDay === "morning" && (
                 <p>Time to have a great start to your day!</p>
               )}
               {timeOfDay === "afternoon" && <p>Hope your day is going well!</p>}
               {timeOfDay === "evening" && <p>Have a relaxing evening!</p>}
+              {timeOfDay === null && <p>Have a great day!</p>}
             </div>
 
             {/* Courses */}
