@@ -1,5 +1,5 @@
-// pages/index.js
-import React from 'react';
+"use client";
+import React, { useState, useEffect } from 'react';
 import { LayoutGrid, User, DollarSign, BookOpen, FileText, Calendar, LogOut, Book, ChevronRight } from 'lucide-react';
 import Sidebar from '@/components/sidebar/Sidebar';
 import GetDate from '@/components/dashboard/Getdate';
@@ -7,22 +7,20 @@ import { getTime } from '@/components/dashboard/getTime';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 import Image from 'next/image';
-// import { getstaffGrades } from '@/utils/[...nextauth]/staff_api';
+import { useParams } from 'next/navigation';
 
-type Props = {
-  params: Promise<{
-    id: string;
-  }>;
-};
+const Dashboard = () => {
+  const params = useParams();
+  const id = params.id as string;
+  const [timeOfDay, setTimeOfDay] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
 
-const Dashboard = async ({params}:Props) => {
-  const timeOfDay = getTime();
-  
-  // Unwrap the params Promise using React.use()
-  const resolvedParams = await params;
-  const { id } = resolvedParams;
-  
-  console.log('Admin Dashboard - Resolved params ID:', id);
+  useEffect(() => {
+    // Set time of day on client side only after hydration
+    setIsClient(true);
+    const clientTimeOfDay = getTime();
+    setTimeOfDay(clientTimeOfDay);
+  }, []);
 
 
   return (
@@ -42,10 +40,11 @@ const Dashboard = async ({params}:Props) => {
     <GetDate />
     {/* // div class to display a message based on the time of the day */}
     <div className="mb-6">
-    <h2 className="text-2xl font-bold">Good {timeOfDay} {id} 😂!</h2>
-        {timeOfDay === 'morning' && <p>Time to have a great start to your day!</p>}
-        {timeOfDay === 'afternoon' && <p>Hope your day is going well!</p>}
-        {timeOfDay === 'evening' && <p>Have a relaxing evening!</p>}
+    <h2 className="text-2xl font-bold">Good {isClient && timeOfDay ? timeOfDay : 'day'} {id} 😂!</h2>
+        {isClient && timeOfDay === 'morning' && <p>Time to have a great start to your day!</p>}
+        {isClient && timeOfDay === 'afternoon' && <p>Hope your day is going well!</p>}
+        {isClient && timeOfDay === 'evening' && <p>Have a relaxing evening!</p>}
+        {(!isClient || timeOfDay === null) && <p>Have a great day!</p>}
     </div>
       
     {/* // This is used to display your courses */}
