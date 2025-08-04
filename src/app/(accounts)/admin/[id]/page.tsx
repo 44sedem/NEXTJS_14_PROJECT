@@ -6,18 +6,23 @@ import GetDate from '@/components/dashboard/Getdate';
 import { getTime } from '@/components/dashboard/getTime';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
 import Image from 'next/image';
 // import { getstaffGrades } from '@/utils/[...nextauth]/staff_api';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-const Dashboard = ({params}:Props) => {
+const Dashboard = async ({params}:Props) => {
   const timeOfDay = getTime();
+  
+  // Unwrap the params Promise using React.use()
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+  
+  console.log('Admin Dashboard - Resolved params ID:', id);
 
 
   return (
@@ -34,10 +39,10 @@ const Dashboard = ({params}:Props) => {
 
     <div className="p-0 bg-gray-100">
     {/* // calling GetDate function from GetDate.tsx */}
-    <GetDate params={params}/>
+    <GetDate />
     {/* // div class to display a message based on the time of the day */}
     <div className="mb-6">
-    <h2 className="text-2xl font-bold">Good {timeOfDay} {params.id} 😂!</h2>
+    <h2 className="text-2xl font-bold">Good {timeOfDay} {id} 😂!</h2>
         {timeOfDay === 'morning' && <p>Time to have a great start to your day!</p>}
         {timeOfDay === 'afternoon' && <p>Hope your day is going well!</p>}
         {timeOfDay === 'evening' && <p>Have a relaxing evening!</p>}
@@ -47,11 +52,11 @@ const Dashboard = ({params}:Props) => {
     <div className="mb-6">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold">Your courses</h3>
-              <Link href={`/staff/${params.id}/courses`} className="text-sm text-blue-600">View All</Link>
+              <Link href={`/staff/${id}/courses`} className="text-sm text-blue-600">View All</Link>
             </div>
             <Card className="bg-white shadow-sm mb-4">
               <CardContent className="p-4 flex items-center">
-              <Link href={`/staff/${params.id}/courses`}><Image src="/books.jpg" alt="Placeholder" width={48} height={48} className="w-12 h-12 bg-gray-200 rounded-lg mr-4"/> </Link>
+              <Link href={`/staff/${id}/courses`}><Image src="/books.jpg" alt="Placeholder" width={48} height={48} className="w-12 h-12 bg-gray-200 rounded-lg mr-4"/> </Link>
                 <div>
                   <p className="font-semibold">Course One</p>
                   <p className="text-xs text-gray-500">12 lessons • 6h 30min • Beginner</p>
@@ -62,7 +67,7 @@ const Dashboard = ({params}:Props) => {
             
             <Card className="bg-white shadow-sm">
               <CardContent className="p-4 flex items-center">
-              <Link href={`/staff/${params.id}/courses`}><Image src="/books.jpg" alt="Placeholder" width={48} height={48}  className="w-12 h-12 bg-gray-200 rounded-lg mr-4"/> </Link>
+              <Link href={`/staff/${id}/courses`}><Image src="/books.jpg" alt="Placeholder" width={48} height={48}  className="w-12 h-12 bg-gray-200 rounded-lg mr-4"/> </Link>
                 <div>
                   <p className="font-semibold">Course Two</p>
                   <p className="text-xs text-gray-500">8 lessons • 4h 15min • Beginner</p>
@@ -77,7 +82,7 @@ const Dashboard = ({params}:Props) => {
             <CardHeader>
               <div className="flex justify-between items-center">
                 <CardTitle className="text-lg font-semibold">Course Task</CardTitle>
-                <Link href={`/staff/${params.id}/finance`}  className="text-sm text-blue-600">View All</Link>
+                <Link href={`/staff/${id}/finance`}  className="text-sm text-blue-600">View All</Link>
               </div>
             </CardHeader>
             <CardContent>

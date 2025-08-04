@@ -3,14 +3,12 @@ import React, {useState, useEffect} from 'react';
 import { Search, Bell} from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-const GetDate = ({params}:Props) => {
+const GetDate = () => {
+  const params = useParams();
+  const id = params.id as string;
+  
   // This function gets the current time and date
   const [currentDateTime, setCurrentDateTime] = useState<Date | null>(null);
   const [isClient, setIsClient] = useState(false);
@@ -63,7 +61,7 @@ const GetDate = ({params}:Props) => {
           <div className="text-sm text-gray-600 w-24 h-5 bg-gray-200 animate-pulse rounded"></div>
           <div className="text-sm text-gray-600 w-32 h-5 bg-gray-200 animate-pulse rounded"></div>
           <Bell className="text-gray-600" size={20} />
-          <Link href={`${params.id}/profile`}>
+          <Link href={`${id}/profile`}>
           <Image src="/noavatar.jpg" alt="Placeholder" className="w-8 h-8 rounded-full" width={32} height={32}/>  </Link>
         </div>
       </div>
@@ -87,7 +85,7 @@ const GetDate = ({params}:Props) => {
         <p className="text-sm text-gray-600 ">{formatDate(currentDateTime)}</p>
         <p className="text-sm text-gray-600">{formatTime(currentDateTime)}</p>
         <Bell className="text-gray-600" size={20} />
-        <Link href={`${params.id}/profile`}>
+        <Link href={`${id}/profile`}>
         <Image src="/noavatar.jpg" alt="Placeholder" className="w-8 h-8 rounded-full" width={32} height={32}/>  </Link>
       </div>
     </div>

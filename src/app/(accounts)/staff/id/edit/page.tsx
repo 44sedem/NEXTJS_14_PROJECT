@@ -1,13 +1,15 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 
-const EditCoursePage = ({ params }: { params: { id: string } }) => {
+const EditCoursePage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const router = useRouter();
   const [course, setCourse] = useState({
     id: '',
@@ -20,10 +22,10 @@ const EditCoursePage = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     // Fetch course data when the component mounts
-    if (params.id) {
-      fetchCourseData(params.id);
+    if (id) {
+      fetchCourseData(id);
     }
-  }, [params.id]);
+  }, [id]);
 
   const fetchCourseData = async (courseId: string) => {
     // In a real application, you would fetch the course data from your API

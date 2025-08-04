@@ -12,14 +12,9 @@ interface StudentType {
   payment_date?: string;
 }
 
-type Props = {
-  params: {
-    id: string,
-    email: string,
-  };
-};
-
-const FinancePage = ({ params }: Props) => {
+const FinancePage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const [studentInfo, setStudentInfo] = useState<StudentType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -27,9 +22,8 @@ const FinancePage = ({ params }: Props) => {
     const fetchData = async () => {
       try {
         setIsLoading(true);
-        const response = await axios.get(`http://localhost:8002/course_service/payment_history?s_id=${params.id}`);
+        const response = await axios.get(`http://localhost:8002/course_service/payment_history?s_id=${id}`);
         setStudentInfo(response.data.payments || []);
-        // console.log(response.data.payments);
       } catch (error) {
         console.error(error);
       } finally {
@@ -38,7 +32,7 @@ const FinancePage = ({ params }: Props) => {
     };
 
     fetchData();
-  }, [params.id]);
+  }, [id]);
 
   const totalAmount = studentInfo.reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
 

@@ -4,6 +4,7 @@ import axios from "axios";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useParams } from "next/navigation";
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -30,13 +31,9 @@ interface CourseType {
   lecturer_phone: string;
 }
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-const RegisterPage = ({ params }: Props) => {
+const RegisterPage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const [availableCourses, setAvailableCourses] = useState<CourseType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [message, setMessage] = useState<string | null>(null);
@@ -58,7 +55,7 @@ const RegisterPage = ({ params }: Props) => {
     // console.log("Submit functioning");
     // console.log(data);
     const enrollmentData = {
-      student_id: Number(params.id),
+      student_id: Number(id),
       courses: data.selectedCourses,
     };
     if (data.selectedCourses.length === 0) {

@@ -5,13 +5,7 @@ import { UserCircle2, BookOpen, DollarSign, Calendar } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Image from 'next/image';
 import Link from 'next/link';
-
-type Props = {
-  params: {
-    id: string,
-    email: string,
-  };
-};
+import { useParams } from 'next/navigation';
 
 interface studentType {
   fname: string;
@@ -41,13 +35,15 @@ const QuickLinkCard: React.FC<QuickLinkCardProps> = ({ icon, title, content }) =
   </div>
 );
 
-const ProfilePage = ({params}: Props) => {
+const ProfilePage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const [studentInfo, setStudentInfo] = useState<studentType | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`http://localhost:8002/course_service/student_info?s_id=${params.id}`);
+        const response = await axios.get(`http://localhost:8002/course_service/student_info?s_id=${id}`);
         setStudentInfo(response.data);
       } catch (error) {
         console.error(error);
@@ -55,7 +51,7 @@ const ProfilePage = ({params}: Props) => {
     };
   
     fetchData();
-  }, [params.id]);
+  }, [id]);
 
   return (
     <div className="flex flex-col h-screen bg-gray-100 py-3">
@@ -94,14 +90,14 @@ const ProfilePage = ({params}: Props) => {
       {/* QuickLinkCards at the bottom */}
       <div className="p-6 bg-gray-200">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Link href={`/student/${params.id}/courses`}>
-          <QuickLinkCard 
-            icon={<BookOpen size={24} />} 
-            title="Current Courses" 
-            content="View your enrolled courses" 
+        <Link href={`/student/${id}/courses`}>
+          <QuickLinkCard
+            icon={<BookOpen size={24} />}
+            title="Current Courses"
+            content="View your enrolled courses"
           />
           </Link>
-          <Link href={`/student/${params.id}/finance`}>
+          <Link href={`/student/${id}/finance`}>
           <QuickLinkCard 
             icon={<DollarSign size={24} />} 
             title="Financial Summary" 

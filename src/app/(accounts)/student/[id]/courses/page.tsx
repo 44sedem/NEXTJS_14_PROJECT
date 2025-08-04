@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { Book, User, Mail, Phone, Calendar, Clock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,7 +9,6 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-;
 
 interface CourseType {
   course_id: string;
@@ -26,13 +25,9 @@ interface CourseType {
   lecturer_phone: string;
 }
 
-type Props = {
-  params: {
-    id: string;
-  };
-};
-
-const CoursePage = ({ params }: Props) => {
+const CoursePage = () => {
+  const params = useParams();
+  const id = params.id as string;
   const [courses, setCourses] = useState<CourseType[]>([]);
   const [availableCourses, setAvailableCourses] = useState<CourseType[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -46,7 +41,7 @@ const CoursePage = ({ params }: Props) => {
       try {
         setIsLoading(true);
         const response = await axios.get(
-          `http://localhost:8002/course_service/student_grades?s_id=${params.id}`
+          `http://localhost:8002/course_service/student_grades?s_id=${id}`
         );
         setCourses(response.data.grades || []);
       } catch (error) {
@@ -57,7 +52,7 @@ const CoursePage = ({ params }: Props) => {
       }
     };
     fetchStudentCourses();
-  }, [params.id]);
+  }, [id]);
 
   if (isLoading) {
     return (

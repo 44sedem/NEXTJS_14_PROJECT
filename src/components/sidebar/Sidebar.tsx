@@ -27,26 +27,27 @@ interface SubItem {
 
 const Sidebar = () => {
   const params = useParams();
+  const id = params.id as string;
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
 
   const itemsTop: SidebarItem[] = [
     {
       name: "Dashboard",
-      path: `/student/${params.id}`,
+      path: `/student/${id}`,
       icon: LayoutDashboard,
     },
     {
       name: "Courses",
-      path: `/student/${params.id}/courses`,
+      path: `/student/${id}/courses`,
       icon: Book,
       items: [
-        { name: "My Courses", path: `/student/${params.id}/courses` },
-        { name: "Course Registration", path: `/student/${params.id}/courses/registration` },
+        { name: "My Courses", path: `/student/${id}/courses` },
+        { name: "Course Registration", path: `/student/${id}/courses/registration` },
       ],
     },
     {
       name: "Finance info",
-      path: `/student/${params.id}/finance`,
+      path: `/student/${id}/finance`,
       icon: Wallet,
     },
   ];
@@ -54,7 +55,7 @@ const Sidebar = () => {
   const itemsBottom: SidebarItem[] = [
     {
       name: "Profile",
-      path: `/student/${params.id}/profile`,
+      path: `/student/${id}/profile`,
       icon: CircleUser,
     },
     {

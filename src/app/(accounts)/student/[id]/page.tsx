@@ -38,13 +38,16 @@ interface studentType {
 const Dashboard = () => {
   const { id } = useParams() as { id: string };
   const [timeOfDay, setTimeOfDay] = useState<string | null>(null);
+  const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const { studentInfoStored } = useContext(AuthInfo);
   const [studentInfo, setStudentInfo] = useState<studentType | null>(null);
 
   useEffect(() => {
-    // Set time of day on client side
-    setTimeOfDay(getTime());
+    // Set time of day on client side only after hydration
+    setIsClient(true);
+    const clientTimeOfDay = getTime();
+    setTimeOfDay(clientTimeOfDay);
     
     const fetchData = async () => {
       try {
@@ -86,18 +89,18 @@ const Dashboard = () => {
       <main className="flex-3 p-0 text-black">
         <div className="p-0 border-b border-gray-200">
           <div className="p-0 bg-gray-100">
-            <GetDate params={{ id }} />
+            <GetDate />
 
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-black">
-                Good {timeOfDay || 'day'} {studentInfo?.lname}!
+                Good {isClient && timeOfDay ? timeOfDay : 'day'} {studentInfo?.lname}!
               </h2>
-              {timeOfDay === "morning" && (
+              {isClient && timeOfDay === "morning" && (
                 <p>Time to have a great start to your day!</p>
               )}
-              {timeOfDay === "afternoon" && <p>Hope your day is going well!</p>}
-              {timeOfDay === "evening" && <p>Have a relaxing evening!</p>}
-              {timeOfDay === null && <p>Have a great day!</p>}
+              {isClient && timeOfDay === "afternoon" && <p>Hope your day is going well!</p>}
+              {isClient && timeOfDay === "evening" && <p>Have a relaxing evening!</p>}
+              {(!isClient || timeOfDay === null) && <p>Have a great day!</p>}
             </div>
 
             {/* Courses */}
